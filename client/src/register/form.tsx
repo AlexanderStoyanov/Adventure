@@ -37,18 +37,15 @@ class Form extends React.Component<Props, State> {
 
     private isValid() {
         const { errors, isValid } = validateInput(this.state);
-
-        if (!isValid) {
-            this.setState({ errors });
-        }
-
+        this.setState({ errors });
         return isValid;
     }
 
-    onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    private onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (this.isValid()) {
+            //this.setState({ timeout: true });
             console.log(this.state);
             // this.setState({ errors: {}, timeout: true });
             // this.props.userSignUpRequest(this.state).then(

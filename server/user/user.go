@@ -1,6 +1,6 @@
 package user
 
-//User is the abstraction for registering new users
+//User template structure
 type User struct {
 	Name     string
 	Username string
