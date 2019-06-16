@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 
+	"github.com/go-kit/kit/log/level"
+
 	"github.com/AlexanderStoyanov/Adventure/server/user"
+	"github.com/go-kit/kit/log"
 )
 
 // ErrInvalidArgument is returned when one or more arguments are invalid.
@@ -12,25 +15,33 @@ var ErrInvalidArgument = errors.New("invalid argument")
 
 // Service is the interface that provides register methods.
 type Service interface {
-	RegisterNewUser(ctx context.Context, user user.User) (string, error)
+	Create(ctx context.Context, user user.User) error
+	GetByID(ctx context.Context, id string) (user.User, error)
 }
 
 type service struct {
-	repo user.Repository
-}
-
-func (s *service) RegisterNewUser(ctx context.Context, user user.User) (string, error) {
-	_, _, _ = client.Collection("users").Add(ctx, map[string]interface{}{
-		"name":     user.Name,
-		"username": user.Username,
-		"email":    user.Email,
-		"password": user.Password,
-		"location": user.Location,
-	})
-	return "", nil
+	repository user.Repository
+	logger     log.Logger
 }
 
 // NewService creates new service
-func NewService() Service {
-	return &service{}
+func NewService(rep user.Repository, logger log.Logger) Service {
+	return &service{
+		repository: rep,
+		logger:     logger,
+	}
+}
+
+func (s *service) Create(ctx context.Context, user user.User) error {
+	return nil
+}
+
+func (s *service) GetByID(ctx context.Context, id string) (user.User, error) {
+	logger := log.With(s.logger, "method", "GetByID")
+	user, err := s.repository.GetUserByID(ctx, id)
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		return user, Service.ErrQueryRepository
+	}
+	return user, nil
 }
