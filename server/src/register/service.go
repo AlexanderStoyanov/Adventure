@@ -40,7 +40,7 @@ func (s *service) Create(ctx context.Context, user userpkg.User) error {
 	user.ID = id
 
 	logger := log.With(s.logger, "method", "Create")
-	err := s.repository.CreateUser(ctx, user)
+	err := s.repository.RegisterNewUser(ctx, user)
 	if err != nil {
 		level.Error(logger).Log("err", err)
 		return userpkg.ErrInsertInRepository
