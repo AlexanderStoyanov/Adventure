@@ -7,12 +7,12 @@ import (
 
 // User template structure
 type User struct {
-	ID       string     `json:"id"`
-	Name     string     `json:"name,omitempty"`
-	Username string     `json:"username"`
-	Email    string     `json:"email"`
-	Password string     `json:"password"`
-	Location [2]float32 `json:"location,omitempty"`
+	ID       string     `firestore:"id"`
+	Name     string     `firestore:"name,omitempty"`
+	Username string     `firestore:"username"`
+	Email    string     `firestore:"email"`
+	Password string     `firestore:"password"`
+	Location [2]float32 `firestore:"location,omitempty"`
 }
 
 var (
@@ -22,8 +22,8 @@ var (
 
 // Repository for users
 type Repository interface {
-	CreateUser(ctx context.Context, user User) error
-	//GetUserByID(ctx context.Context, id string) (User, error)
+	RegisterNewUser(ctx context.Context, user User) error
+	GetUserByID(ctx context.Context, id string) (User, error)
 }
 
 // New creates a new user

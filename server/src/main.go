@@ -9,7 +9,8 @@ import (
 	"cloud.google.com/go/firestore"
 
 	"github.com/AlexanderStoyanov/Adventure/server/register"
-	"github.com/AlexanderStoyanov/Adventure/server/user"
+	// "github.com/AlexanderStoyanov/Adventure/server/user"
+	"user"
 )
 
 func main() {
