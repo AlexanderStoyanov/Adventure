@@ -5,8 +5,6 @@ import (
 	"fmt"
 	userpkg "user"
 
-	"github.com/mitchellh/mapstructure"
-
 	"cloud.google.com/go/firestore"
 	"github.com/go-kit/kit/log"
 	"github.com/mmcloughlin/geohash"
@@ -45,9 +43,8 @@ func (repo *userRepository) GetUserByID(ctx context.Context, username string) (u
 		return userpkg.User{}, err
 	}
 	var user userpkg.User
-	data := dsnap.Data()
-	err = mapstructure.Decode(data, &user)
-	user.Latitude, user.Longitude = geohash.Decode(data["geohash"].(string))
+	dsnap.DataTo(&user)
+	user.Latitude, user.Longitude = geohash.Decode(dsnap.Data()["geohash"].(string))
 	fmt.Println(user)
 	return user, nil
 }
