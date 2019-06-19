@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 
+	"golang.org/x/crypto/bcrypt"
+
 	//userpkg "github.com/AlexanderStoyanov/Adventure/server/user"
 	userpkg "user"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	"github.com/gofrs/uuid"
 )
 
 // ErrInvalidArgument is returned when one or more arguments are invalid.
@@ -17,8 +18,8 @@ var ErrInvalidArgument = errors.New("Invalid argument")
 
 // Service is the interface that provides register methods.
 type Service interface {
-	Create(ctx context.Context, user userpkg.User) error
-	GetByID(ctx context.Context, id string) (userpkg.User, error)
+	RegisterUser(ctx context.Context, user userpkg.User) error
+	GetUserByID(ctx context.Context, id string) (userpkg.User, error)
 }
 
 type service struct {
@@ -34,26 +35,28 @@ func NewService(rep userpkg.Repository, logger log.Logger) Service {
 	}
 }
 
-func (s *service) Create(ctx context.Context, user userpkg.User) error {
-	uuid, _ := uuid.NewV4()
-	id := uuid.String()
-	user.ID = id
+func (s *service) RegisterUser(ctx context.Context, user userpkg.User) error {
+	logger := log.With(s.logger, "method", "RegisterUserService")
 
-	logger := log.With(s.logger, "method", "Create")
-	err := s.repository.RegisterNewUser(ctx, user)
-	if err != nil {
+	if hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost); err == nil {
+		user.Password = string(hashedPassword)
+	} else if err != nil {
+		level.Error(logger).Log("err", err)
+	}
+
+	if err := s.repository.RegisterUser(ctx, user); err != nil {
 		level.Error(logger).Log("err", err)
 		return userpkg.ErrInsertInRepository
 	}
 	return nil
 }
 
-func (s *service) GetByID(ctx context.Context, id string) (userpkg.User, error) {
+func (s *service) GetUserByID(ctx context.Context, id string) (userpkg.User, error) {
 	if id == "" {
 		return userpkg.User{}, ErrInvalidArgument
 	}
 
-	logger := log.With(s.logger, "method", "GetByID")
+	logger := log.With(s.logger, "method", "GetUserByIDService")
 	user, err := s.repository.GetUserByID(ctx, id)
 	if err != nil {
 		level.Error(logger).Log("err", err)

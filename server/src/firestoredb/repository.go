@@ -2,10 +2,14 @@ package firestoredb
 
 import (
 	"context"
+	"fmt"
 	userpkg "user"
+
+	"github.com/mitchellh/mapstructure"
 
 	"cloud.google.com/go/firestore"
 	"github.com/go-kit/kit/log"
+	"github.com/mmcloughlin/geohash"
 )
 
 type userRepository struct {
@@ -21,18 +25,29 @@ func NewUserRepository(db *firestore.Client, logger log.Logger) (userpkg.Reposit
 	}, nil
 }
 
-func (repo *userRepository) RegisterNewUser(ctx context.Context, user userpkg.User) error {
-	_, _, err := repo.db.Collection("users").Add(ctx, map[string]interface{}{
+func (repo *userRepository) RegisterUser(ctx context.Context, user userpkg.User) error {
+	DocumentRef := repo.db.Collection("users").Doc(user.Username)
+	if dsnap, _ := DocumentRef.Get(ctx); dsnap.Data() != nil {
+		return userpkg.ErrInsertInRepository
+	}
+	_, err := DocumentRef.Set(ctx, map[string]interface{}{
 		"name":     user.Name,
-		"username": user.Username,
 		"email":    user.Email,
 		"password": user.Password,
-		"location": user.Location,
+		"geohash":  geohash.EncodeWithPrecision(user.Latitude, user.Longitude, 12),
 	})
 	return err
 }
 
-func (repo *userRepository) GetUserByID(ctx context.Context, id string) (userpkg.User, error) {
-	//stub
-	return userpkg.User{}, nil
+func (repo *userRepository) GetUserByID(ctx context.Context, username string) (userpkg.User, error) {
+	dsnap, err := repo.db.Collection("users").Doc(username).Get(ctx)
+	if err != nil {
+		return userpkg.User{}, err
+	}
+	var user userpkg.User
+	data := dsnap.Data()
+	err = mapstructure.Decode(data, &user)
+	user.Latitude, user.Longitude = geohash.Decode(data["geohash"].(string))
+	fmt.Println(user)
+	return user, nil
 }
