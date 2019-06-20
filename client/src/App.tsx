@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from "react-router-dom";
 
-import Register from './register/register';
+import Register from './authentication/register';
 
 class App extends React.Component {
   render() {

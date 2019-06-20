@@ -4,7 +4,7 @@ import validateInput from '../common/validateInput';
 import ErrorEntity from '../common/model/errorEntity';
 
 interface Props {
-    
+    userSignUpRequest: any
 }
 
 interface State {
@@ -45,8 +45,10 @@ class Form extends React.Component<Props, State> {
         event.preventDefault();
 
         if (this.isValid()) {
+            const { username, email, password } = this.state;
             //this.setState({ timeout: true });
             console.log(this.state);
+            this.props.userSignUpRequest({username, email, password});
             // this.setState({ errors: {}, timeout: true });
             // this.props.userSignUpRequest(this.state).then(
             //     (res: any) => {
