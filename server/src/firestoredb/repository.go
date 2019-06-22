@@ -3,11 +3,12 @@ package firestoredb
 import (
 	"context"
 	"fmt"
-	userpkg "user"
 
 	"cloud.google.com/go/firestore"
 	"github.com/go-kit/kit/log"
 	"github.com/mmcloughlin/geohash"
+
+	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 type userRepository struct {

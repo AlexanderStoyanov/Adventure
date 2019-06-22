@@ -13,10 +13,8 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	// "github.com/AlexanderStoyanov/Adventure/server/register"
-	// "github.com/AlexanderStoyanov/Adventure/server/user"
-	"firestoredb"
-	"register"
+	"github.com/AlexanderStoyanov/Adventure/server/src/firestoredb"
+	"github.com/AlexanderStoyanov/Adventure/server/src/register"
 )
 
 const (
@@ -74,9 +72,6 @@ func main() {
 	}()
 
 	logger.Log("terminated", <-errs)
-
-	//rs.RegisterUser(ctx, user.User{"Nastya", "san", "bla@bla123", "bla", 40.7128, -74.0060})
-	//rs.GetUserByID(ctx, "san")
 }
 
 func accessControl(h http.Handler) http.Handler {

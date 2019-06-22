@@ -2,9 +2,10 @@ package register
 
 import (
 	"context"
-	userpkg "user"
 
 	"github.com/go-kit/kit/endpoint"
+
+	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 // RegisterUserRequest holds the request parameters for the RegisterUser method

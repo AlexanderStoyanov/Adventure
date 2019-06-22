@@ -10,7 +10,7 @@ import (
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 
-	userpkg "user"
+	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 // MakeHandler returns a handler for the register service

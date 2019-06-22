@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"golang.org/x/crypto/bcrypt"
-
-	//userpkg "github.com/AlexanderStoyanov/Adventure/server/user"
-	userpkg "user"
-
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"golang.org/x/crypto/bcrypt"
+
+	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 // ErrInvalidArgument is returned when one or more arguments are invalid.
