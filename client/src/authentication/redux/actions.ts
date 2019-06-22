@@ -19,7 +19,7 @@ export const userSignUpRequest = (userData: userData): ThunkAction<void, AppStat
     return async dispatch => {
         dispatch(request(SIGN_UP_REQUEST));
         try {
-            let res = await axios.post('localhost:8080/register', userData);
+            let res = await axios.post('//localhost:8080/register', userData);
             dispatch(receive(SIGN_UP_SUCCESS, res.data));
         } catch (err) {
             dispatch(error(SIGN_UP_FAILURE, err.message));
