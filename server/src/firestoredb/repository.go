@@ -2,7 +2,6 @@ package firestoredb
 
 import (
 	"context"
-	"fmt"
 
 	"cloud.google.com/go/firestore"
 	"github.com/go-kit/kit/log"
@@ -46,6 +45,16 @@ func (repo *userRepository) GetUserByID(ctx context.Context, username string) (u
 	var user userpkg.User
 	dsnap.DataTo(&user)
 	user.Latitude, user.Longitude = geohash.Decode(dsnap.Data()["geohash"].(string))
-	fmt.Println(user)
 	return user, nil
 }
+
+// func (repo *userRepository) LoginUser(ctx context.Context, username, password string) (userpkg.User, error) {
+// 	dsnap, err := repo.db.Collection("users").Doc(username).Get(ctx)
+// 	if err != nil {
+// 		return userpkg.User{}, err
+// 	}
+// 	var user userpkg.User
+// 	dsnap.DataTo(&user)
+// 	user.Latitude, user.Longitude = geohash.Decode(dsnap.Data()["geohash"].(string))
+// 	return user, nil
+// }

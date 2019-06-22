@@ -18,6 +18,7 @@ var ErrInvalidArgument = errors.New("Invalid argument")
 type Service interface {
 	RegisterUser(ctx context.Context, user userpkg.User) error
 	GetUserByID(ctx context.Context, id string) (userpkg.User, error)
+	LoginUser(ctx context.Context, username, password string) error
 }
 
 type service struct {
@@ -59,6 +60,25 @@ func (s *service) GetUserByID(ctx context.Context, id string) (userpkg.User, err
 	if err != nil {
 		level.Error(logger).Log("err", err)
 		return user, userpkg.ErrQueryRepository
+	}
+	return user, nil
+}
+
+func (s *service) LoginUser(ctx context.Context, username, password string) (userpkg.User, error) {
+	if username == "" || password == "" {
+		return userpkg.User{}, ErrInvalidArgument
+	}
+
+	logger := log.With(s.logger, "method", "LoginUser")
+	user, err := s.repository.GetUserByID(ctx, username)
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		return userpkg.User{}, userpkg.ErrLoginUser
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		return userpkg.User{}, userpkg.ErrLoginUser
 	}
 	return user, nil
 }

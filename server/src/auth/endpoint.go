@@ -25,3 +25,22 @@ func makeRegisterUserEndpoint(s Service) endpoint.Endpoint {
 		return RegisterUserResponse{Err: err}, nil
 	}
 }
+
+// LoginUserRequest holds the request parameters for the LoginUser method
+type LoginUserRequest struct {
+	Username string
+	Password string
+}
+
+// LoginUserResponse holds the response values for the LoginUser method
+type LoginUserResponse struct {
+	Err error
+}
+
+func makeLoginUserEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LoginUserRequest)
+		err := s.LoginUser(ctx, req.Username, req.Password)
+		return LoginUserResponse{Err: err}, nil
+	}
+}
