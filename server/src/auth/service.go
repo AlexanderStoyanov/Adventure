@@ -18,7 +18,7 @@ var ErrInvalidArgument = errors.New("Invalid argument")
 type Service interface {
 	RegisterUser(ctx context.Context, user userpkg.User) error
 	GetUserByID(ctx context.Context, id string) (userpkg.User, error)
-	LoginUser(ctx context.Context, username, password string) error
+	LoginUser(ctx context.Context, username, password string) (userpkg.User, error)
 }
 
 type service struct {

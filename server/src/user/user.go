@@ -25,7 +25,6 @@ var (
 type Repository interface {
 	RegisterUser(ctx context.Context, user User) error
 	GetUserByID(ctx context.Context, id string) (User, error)
-	//LoginUser(ctx context.Context, username, password string) error
 }
 
 // New creates a new user

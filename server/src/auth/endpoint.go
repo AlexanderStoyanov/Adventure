@@ -34,13 +34,14 @@ type LoginUserRequest struct {
 
 // LoginUserResponse holds the response values for the LoginUser method
 type LoginUserResponse struct {
-	Err error
+	User userpkg.User
+	Err  error
 }
 
 func makeLoginUserEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoginUserRequest)
-		err := s.LoginUser(ctx, req.Username, req.Password)
-		return LoginUserResponse{Err: err}, nil
+		user, err := s.LoginUser(ctx, req.Username, req.Password)
+		return LoginUserResponse{User: user, Err: err}, nil
 	}
 }
