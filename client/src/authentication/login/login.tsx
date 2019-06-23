@@ -2,16 +2,17 @@ import React from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import Form from './form';
 import { connect } from 'react-redux';
-import { AppState } from '../rootReducer';
-import { signUpState } from './redux/types';
-import { userSignUpRequest } from './redux/actions';
+import { AppState } from '../../rootReducer';
+import { signUpState } from '../redux/types';
+import { userSignUpRequest, userLoginRequest } from '../redux/actions';
 
 interface Props {
     userSignUpRequest: typeof userSignUpRequest,
+    userLoginRequest: typeof userLoginRequest,
     signUp: signUpState
 }
 
-class Register extends React.Component<Props> {
+class Login extends React.Component<Props> {
     render() {
         const { ...props } = this.props;
         return (
@@ -34,9 +35,10 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(
     {
-        userSignUpRequest
+        userSignUpRequest,
+        userLoginRequest
     },
     dispatch
 )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

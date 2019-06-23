@@ -1,4 +1,4 @@
-export interface userData {
+export interface signUpData {
     username: string
     email: string
     password: String
@@ -24,4 +24,36 @@ interface userSignUpFailureAction {
     payload: { error: string },
 }
 
-export type AuthActionTypes = userSignUpRequestAction | userSignUpSuccessAction | userSignUpFailureAction
+
+export interface loginData {
+    username: string
+    password: String
+}
+
+export interface loginState {
+}
+
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+interface userLoginRequestAction {
+    type: typeof LOGIN_REQUEST
+}
+
+interface userLoginSuccessAction {
+    type: typeof LOGIN_SUCCESS,
+}
+
+interface userLoginFailureAction {
+    type: typeof LOGIN_FAILURE,
+    payload: { error: string },
+}
+
+export type AuthActionTypes = 
+userSignUpRequestAction | 
+userSignUpSuccessAction | 
+userSignUpFailureAction |
+userLoginRequestAction |
+userLoginSuccessAction |
+userLoginFailureAction

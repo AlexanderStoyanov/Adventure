@@ -13,8 +13,8 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	auth "github.com/AlexanderStoyanov/Adventure/server/src/auth"
 	"github.com/AlexanderStoyanov/Adventure/server/src/firestoredb"
-	"github.com/AlexanderStoyanov/Adventure/server/src/register"
 )
 
 const (
@@ -50,12 +50,12 @@ func main() {
 
 	var repo, _ = firestoredb.NewUserRepository(client, logger)
 
-	var rs register.Service
-	rs = register.NewService(repo, logger)
+	var as auth.Service
+	as = auth.NewService(repo, logger)
 
 	httpLogger := log.With(logger, "component", "http")
 	mux := http.NewServeMux()
-	mux.Handle("/register", register.MakeHandler(rs, httpLogger))
+	mux.Handle("/auth", auth.MakeHandler(as, httpLogger))
 
 	http.Handle("/", accessControl(mux))
 	http.Handle("/metrics", promhttp.Handler())

@@ -10,19 +10,36 @@ import {
     SIGN_UP_REQUEST, 
     SIGN_UP_SUCCESS, 
     SIGN_UP_FAILURE,
-    userData,
+    signUpData,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGIN_FAILURE,
+    loginData,
 } from "./types";
 
 
 //Sign up attempt
-export const userSignUpRequest = (userData: userData): ThunkAction<void, AppState, null, Action<string>> => {
+export const userSignUpRequest = (signUpData: signUpData): ThunkAction<void, AppState, null, Action<string>> => {
     return async dispatch => {
         dispatch(request(SIGN_UP_REQUEST));
         try {
-            let res = await axios.post('//localhost:8080/register', userData);
+            let res = await axios.post('//localhost:8080/auth', signUpData);
             dispatch(receive(SIGN_UP_SUCCESS, res.data));
         } catch (err) {
             dispatch(error(SIGN_UP_FAILURE, err.message));
+        }
+    };
+}
+
+//Login attempt
+export const userLoginRequest = (loginData: loginData): ThunkAction<void, AppState, null, Action<string>> => {
+    return async dispatch => {
+        dispatch(request(LOGIN_REQUEST));
+        try {
+            let res = await axios.post('//localhost:8080/auth', loginData);
+            dispatch(receive(LOGIN_SUCCESS, res.data));
+        } catch (err) {
+            dispatch(error(LOGIN_FAILURE, err.message));
         }
     };
 }

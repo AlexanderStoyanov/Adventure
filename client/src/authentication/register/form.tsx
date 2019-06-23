@@ -1,7 +1,7 @@
 import React from 'react';
-import TextField from '../common/textField';
-import validateInput from '../common/validateInput';
-import ErrorEntity from '../common/model/errorEntity';
+import TextField from '../../common/textField';
+import validateInput from '../../common/validateInput';
+import ErrorEntity from '../../common/model/errorEntity';
 
 interface Props {
     userSignUpRequest: any
