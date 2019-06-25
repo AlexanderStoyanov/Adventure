@@ -3,14 +3,13 @@ package auth
 import (
 	"context"
 
+	"firebase.google.com/go/auth"
 	"github.com/go-kit/kit/endpoint"
-
-	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 // RegisterUserRequest holds the request parameters for the RegisterUser method
 type RegisterUserRequest struct {
-	User userpkg.User
+	User *auth.UserToCreate
 }
 
 // RegisterUserResponse holds the response values for the RegisterUser method
@@ -34,7 +33,7 @@ type LoginUserRequest struct {
 
 // LoginUserResponse holds the response values for the LoginUser method
 type LoginUserResponse struct {
-	User userpkg.User
+	User *auth.UserRecord
 	Err  error
 }
 

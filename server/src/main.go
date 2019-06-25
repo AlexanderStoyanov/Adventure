@@ -9,7 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go"
+	fbauth "firebase.google.com/go/auth"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -35,18 +36,35 @@ func main() {
 
 		ctx = context.Background()
 	)
-
-	// Get a Firestore client.
-	client, _ := firestore.NewClient(ctx, projectID)
-
-	// Close client when done.
-	defer client.Close()
-
 	flag.Parse()
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+
+	app, err := firebase.NewApp(ctx, nil)
+	if err != nil {
+		logger.Log("error initializing firebase app", err)
+	}
+
+	client, err := app.Auth(ctx)
+
+	if err != nil {
+		logger.Log("error getting auth client", err)
+	}
+	params := (&fbauth.UserToCreate{}).
+		Email("user@example.com").
+		EmailVerified(false).
+		PhoneNumber("+15555550100").
+		Password("secretPassword").
+		DisplayName("John Doe").
+		PhotoURL("http://www.example.com/12345678/photo.png").
+		Disabled(false)
+	u, err := client.CreateUser(ctx, params)
+	if err != nil {
+		logger.Log("error creating user", err)
+	}
+	logger.Log("Successfully created user", u)
 
 	var repo, _ = firestoredb.NewUserRepository(client, logger)
 
