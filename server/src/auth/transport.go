@@ -36,6 +36,7 @@ func MakeHandler(as Service, logger kitlog.Logger) http.Handler {
 
 func decodeRegisterUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var body struct {
+		Username string `json:"username"`
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
@@ -46,7 +47,10 @@ func decodeRegisterUserRequest(_ context.Context, r *http.Request) (interface{},
 
 	params := (&auth.UserToCreate{}).
 		Email(body.Email).
-		Password(body.Password)
+		EmailVerified(false).
+		Password(body.Password).
+		DisplayName(body.Username).
+		Disabled(false)
 
 	return RegisterUserRequest{
 		params,

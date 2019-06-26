@@ -37,7 +37,7 @@ func (s *service) RegisterUser(ctx context.Context, user *auth.UserToCreate) err
 
 	if _, err := s.repository.RegisterUser(ctx, user); err != nil {
 		level.Error(logger).Log("err", err)
-		return ErrInsertInRepository
+		return err
 	}
 	return nil
 }
@@ -51,7 +51,7 @@ func (s *service) GetUserByID(ctx context.Context, id string) (*auth.UserRecord,
 	user, err := s.repository.GetUserByID(ctx, id)
 	if err != nil {
 		level.Error(logger).Log("err", err)
-		return user, ErrQueryRepository
+		return nil, ErrQueryRepository
 	}
 	return user, nil
 }
