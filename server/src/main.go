@@ -10,12 +10,10 @@ import (
 	"syscall"
 
 	firebase "firebase.google.com/go"
-	fbauth "firebase.google.com/go/auth"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	auth "github.com/AlexanderStoyanov/Adventure/server/src/auth"
-	"github.com/AlexanderStoyanov/Adventure/server/src/firestoredb"
+	auth "auth"
 )
 
 const (
@@ -26,7 +24,7 @@ const (
 func main() {
 	var (
 		// Sets your Google Cloud Platform project ID.
-		projectID = "elliptical-city-243420"
+		//projectID = "elliptical-city-243420"
 
 		addr = envString("PORT", defaultPort)
 		// rsurl = envString("ROUTINGSERVICE_URL", defaultRoutingServiceURL)
@@ -47,33 +45,14 @@ func main() {
 		logger.Log("error initializing firebase app", err)
 	}
 
-	client, err := app.Auth(ctx)
-
-	if err != nil {
-		logger.Log("error getting auth client", err)
-	}
-	params := (&fbauth.UserToCreate{}).
-		Email("user@example.com").
-		EmailVerified(false).
-		PhoneNumber("+15555550100").
-		Password("secretPassword").
-		DisplayName("John Doe").
-		PhotoURL("http://www.example.com/12345678/photo.png").
-		Disabled(false)
-	u, err := client.CreateUser(ctx, params)
-	if err != nil {
-		logger.Log("error creating user", err)
-	}
-	logger.Log("Successfully created user", u)
-
-	var repo, _ = firestoredb.NewUserRepository(client, logger)
+	var userRepo, _ = auth.NewUserRepository(app, logger)
 
 	var as auth.Service
-	as = auth.NewService(repo, logger)
+	as = auth.NewService(userRepo, logger)
 
 	httpLogger := log.With(logger, "component", "http")
 	mux := http.NewServeMux()
-	mux.Handle("/auth", auth.MakeHandler(as, httpLogger))
+	mux.Handle("/auth/", auth.MakeHandler(as, httpLogger))
 
 	http.Handle("/", accessControl(mux))
 	http.Handle("/metrics", promhttp.Handler())

@@ -1,5 +1,5 @@
 export interface signUpData {
-    username: string
+    // username: string
     email: string
     password: String
 }

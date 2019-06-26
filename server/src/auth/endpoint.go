@@ -27,7 +27,7 @@ func makeRegisterUserEndpoint(s Service) endpoint.Endpoint {
 
 // LoginUserRequest holds the request parameters for the LoginUser method
 type LoginUserRequest struct {
-	Username string
+	Email    string
 	Password string
 }
 
@@ -40,7 +40,7 @@ type LoginUserResponse struct {
 func makeLoginUserEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoginUserRequest)
-		user, err := s.LoginUser(ctx, req.Username, req.Password)
+		user, err := s.LoginUser(ctx, req.Email, req.Password)
 		return LoginUserResponse{User: user, Err: err}, nil
 	}
 }

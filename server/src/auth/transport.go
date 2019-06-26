@@ -5,23 +5,23 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"firebase.google.com/go/auth"
+
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/transport"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
-
-	userpkg "github.com/AlexanderStoyanov/Adventure/server/src/user"
 )
 
 // MakeHandler returns a handler for the register service
-func MakeHandler(rs Service, logger kitlog.Logger) http.Handler {
+func MakeHandler(as Service, logger kitlog.Logger) http.Handler {
 	opts := []kithttp.ServerOption{
 		kithttp.ServerErrorHandler(transport.NewLogErrorHandler(logger)),
 		kithttp.ServerErrorEncoder(encodeError),
 	}
 
 	registerUserHandler := kithttp.NewServer(
-		makeRegisterUserEndpoint(rs),
+		makeRegisterUserEndpoint(as),
 		decodeRegisterUserRequest,
 		encodeResponse,
 		opts...,
@@ -29,17 +29,28 @@ func MakeHandler(rs Service, logger kitlog.Logger) http.Handler {
 
 	r := mux.NewRouter()
 
-	r.Handle("/register", registerUserHandler).Methods("POST")
+	r.Handle("/auth/register", registerUserHandler).Methods("POST")
 
 	return r
 }
 
 func decodeRegisterUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var req RegisterUserRequest
-	if err := json.NewDecoder(r.Body).Decode(&req.User); err != nil {
+	var body struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, err
 	}
-	return req, nil
+
+	params := (&auth.UserToCreate{}).
+		Email(body.Email).
+		Password(body.Password)
+
+	return RegisterUserRequest{
+		params,
+	}, nil
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
@@ -58,9 +69,9 @@ type errorer interface {
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	switch err {
-	case userpkg.ErrInsertInRepository:
+	case ErrInsertInRepository:
 		w.WriteHeader(http.StatusBadRequest)
-	case userpkg.ErrQueryRepository:
+	case ErrQueryRepository:
 		w.WriteHeader(http.StatusNotFound)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
