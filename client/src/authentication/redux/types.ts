@@ -1,7 +1,13 @@
+export interface authState {
+    loading?: boolean
+    error?: object
+    user?: object
+}
+
 export interface signUpData {
     // username: string
     email: string
-    password: String
+    password: string
 }
 
 export interface signUpState {
@@ -24,10 +30,24 @@ interface userSignUpFailureAction {
     payload: { error: string },
 }
 
+interface user {
+    displayName?: string
+    email?: string
+    emailVerified: boolean
+    isAnonymous: boolean
+    metadata: object
+    phoneNumber?: string
+    photoURL?: string
+    providerData: object
+    providerId: string
+    refreshToken: string
+    uid: string
+}
+
 
 export interface loginData {
-    username: string
-    password: String
+    email: string
+    password: string
 }
 
 export interface loginState {
@@ -43,6 +63,7 @@ interface userLoginRequestAction {
 
 interface userLoginSuccessAction {
     type: typeof LOGIN_SUCCESS,
+    payload: user,
 }
 
 interface userLoginFailureAction {

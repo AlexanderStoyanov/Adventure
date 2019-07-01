@@ -27,9 +27,17 @@ func MakeHandler(as Service, logger kitlog.Logger) http.Handler {
 		opts...,
 	)
 
+	loginUserHandler := kithttp.NewServer(
+		makeLoginUserEndpoint(as),
+		decodeLoginUserRequest,
+		encodeResponse,
+		opts...,
+	)
+
 	r := mux.NewRouter()
 
 	r.Handle("/auth/register", registerUserHandler).Methods("POST")
+	r.Handle("/auth/login", loginUserHandler).Methods("POST")
 
 	return r
 }
@@ -54,6 +62,23 @@ func decodeRegisterUserRequest(_ context.Context, r *http.Request) (interface{},
 
 	return RegisterUserRequest{
 		params,
+	}, nil
+}
+
+func decodeLoginUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var body struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		return nil, err
+	}
+
+	return LoginUserRequest{
+		body.Email,
+		body.Password,
 	}, nil
 }
 

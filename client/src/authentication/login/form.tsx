@@ -1,24 +1,29 @@
 import React from 'react';
 import TextField from '../../common/textField';
 import ErrorEntity from '../../common/model/errorEntity';
+import { authState } from '../redux/types';
+import { withRouter } from "react-router-dom";
+import { userSignUpRequest, userLoginRequest } from '../redux/actions';
 
 interface Props {
-    userSignUpRequest: any
-    userLoginRequest: any
+    userSignUpRequest: typeof userSignUpRequest
+    userLoginRequest: typeof userLoginRequest
+    auth: authState
+    history: any
 }
 
 interface State {
-    username: string;
-    password: string;
-    errors: ErrorEntity;
-    timeout: boolean;
+    email: string
+    password: string
+    errors: ErrorEntity
+    timeout: boolean
 }
 
 class Form extends React.Component<Props, State> {
     constructor(props: Readonly<Props>) {
         super(props);
         this.state = {
-            username: '',
+            email: '',
             password: '',
             errors: {},
             timeout: false,
@@ -34,18 +39,21 @@ class Form extends React.Component<Props, State> {
     }
 
     private isValid() {
-        if (this.state.username === '' || this.state.password === '') {
+        if (this.state.email === '' || this.state.password === '') {
             return false;
         }
         return true;
     }
 
-    private onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    private async onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (this.isValid()) {
-            const { username, password } = this.state;
-            this.props.userLoginRequest({username, password});
+            const { email, password } = this.state;
+            await this.props.userLoginRequest({email, password});
+            if(this.props.auth.user) {
+                this.props.history.push('/secret');
+            }
         }
     }
 
@@ -55,12 +63,12 @@ class Form extends React.Component<Props, State> {
             <form onSubmit={this.onSubmit} >
 
                 <TextField
-                    error={errors.username}
-                    label="Username"
+                    error={errors.email}
+                    label="Email"
                     onChange={this.onFieldChange}
                     //onBlur={this.checkUserExists}
-                    value={this.state.username}
-                    field="username"
+                    value={this.state.email}
+                    field="email"
                     type="text"
                 />
 
@@ -79,4 +87,4 @@ class Form extends React.Component<Props, State> {
     }
 }
 
-export default Form;
+export default withRouter<any>(Form);

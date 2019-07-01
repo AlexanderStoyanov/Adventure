@@ -3,13 +3,15 @@ import { bindActionCreators, Dispatch } from 'redux';
 import Form from './form';
 import { connect } from 'react-redux';
 import { AppState } from '../../rootReducer';
-import { signUpState } from '../redux/types';
+import { signUpState, authState } from '../redux/types';
 import { userSignUpRequest, userLoginRequest } from '../redux/actions';
 
 interface Props {
-    userSignUpRequest: typeof userSignUpRequest,
-    userLoginRequest: typeof userLoginRequest,
+    userSignUpRequest: typeof userSignUpRequest
+    userLoginRequest: typeof userLoginRequest
     signUp: signUpState
+    auth: authState
+    history: any
 }
 
 class Login extends React.Component<Props> {

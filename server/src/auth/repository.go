@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -45,9 +46,10 @@ func (repo *userRepository) RegisterUser(ctx context.Context, user *auth.UserToC
 	return u, nil
 }
 
-func (repo *userRepository) GetUserByID(ctx context.Context, uid string) (*auth.UserRecord, error) {
+func (repo *userRepository) GetUserByID(ctx context.Context, email string) (*auth.UserRecord, error) {
 	client, err := repo.firebaseApp.Auth(ctx)
-	u, err := client.GetUser(ctx, uid)
+	u, err := client.GetUserByEmail(ctx, email)
+	fmt.Println(u)
 	if err != nil {
 		repo.logger.Log("error", err)
 		return nil, err

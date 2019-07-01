@@ -5,9 +5,22 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { rootReducer } from './rootReducer';
+import firebase from 'firebase';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAKLRnQtv7mdlP8AXiMPzGM-KNXKxHhUYI",
+    authDomain: "elliptical-city-243420.firebaseapp.com",
+    databaseURL: "https://elliptical-city-243420.firebaseio.com",
+    projectId: "elliptical-city-243420",
+    storageBucket: "elliptical-city-243420.appspot.com",
+    messagingSenderId: "776826550815",
+    appId: "1:776826550815:web:2975bd47fba3212d"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const store = createStore(
     rootReducer,

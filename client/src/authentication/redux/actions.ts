@@ -2,13 +2,14 @@ import axios from 'axios';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../rootReducer';
 import { Action } from 'redux';
+import firebase from 'firebase';
 
 import request from '../../common/actions/request';
 import receive from '../../common/actions/receive';
 import error from '../../common/actions/error';
-import { 
-    SIGN_UP_REQUEST, 
-    SIGN_UP_SUCCESS, 
+import {
+    SIGN_UP_REQUEST,
+    SIGN_UP_SUCCESS,
     SIGN_UP_FAILURE,
     signUpData,
     LOGIN_REQUEST,
@@ -36,8 +37,10 @@ export const userLoginRequest = (loginData: loginData): ThunkAction<void, AppSta
     return async dispatch => {
         dispatch(request(LOGIN_REQUEST));
         try {
-            let res = await axios.post('//localhost:8080/auth/login', loginData);
-            dispatch(receive(LOGIN_SUCCESS, res.data));
+            let res = await firebase.auth().signInWithEmailAndPassword(loginData.email, loginData.password);
+            if (res.user != null) {
+                dispatch(receive(LOGIN_SUCCESS, res.user));
+            }
         } catch (err) {
             dispatch(error(LOGIN_FAILURE, err.message));
         }
