@@ -9,7 +9,7 @@ import firebase from 'firebase';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { firebaseConfig } from '../config';
+import { firebaseConfig } from './config';
 
 firebase.initializeApp(firebaseConfig);
 

@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 
 import Register from './authentication/register/register';
 import Login from './authentication/login/login';
+import Maps from './maps/maps';
 
 class App extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class App extends React.Component {
         <main>
           <Switch>
             <Route path={`/register`} component={Register} />
-            <Route path={`/`} component={Login} />
+            <Route path={`/`} component={Maps} />
           </Switch>
         </main>
       </div>
