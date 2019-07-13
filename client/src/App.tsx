@@ -3,7 +3,9 @@ import { Route, Switch } from "react-router-dom";
 
 import Register from './authentication/register/register';
 import Login from './authentication/login/login';
-import Maps from './maps/maps';
+import EventsPage from './events/eventsPage';
+
+//import Maps from './maps/maps';
 
 class App extends React.Component {
   render() {
@@ -11,8 +13,9 @@ class App extends React.Component {
       <div className="App">
         <main>
           <Switch>
+            <Route path={`/login`} component={Login} />
             <Route path={`/register`} component={Register} />
-            <Route path={`/`} component={Maps} />
+            <Route path={`/`} component={EventsPage} />
           </Switch>
         </main>
       </div>

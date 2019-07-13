@@ -1,7 +1,6 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import { apiKey } from '../config';
-import Event from '../common/event';
 
 interface Props {
 }
@@ -19,11 +18,6 @@ class Maps extends React.Component<Props> {
                     }}
                     defaultZoom={15}
                 >
-                    <Event
-                        lat={40.71}
-                        lng={-74.00}
-                        text="My Marker is hereeeee"
-                    />
                 </GoogleMapReact>
             </div>
         )
