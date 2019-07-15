@@ -1,11 +1,9 @@
-package auth
+package event
 
 import (
 	"context"
 	"encoding/json"
 	"net/http"
-
-	"firebase.google.com/go/auth"
 
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/transport"
@@ -14,72 +12,52 @@ import (
 )
 
 // MakeHandler returns a handler for the register service
-func MakeHandler(as Service, logger kitlog.Logger) http.Handler {
+func MakeHandler(es Service, logger kitlog.Logger) http.Handler {
 	opts := []kithttp.ServerOption{
 		kithttp.ServerErrorHandler(transport.NewLogErrorHandler(logger)),
 		kithttp.ServerErrorEncoder(encodeError),
 	}
 
-	registerUserHandler := kithttp.NewServer(
-		makeRegisterUserEndpoint(as),
-		decodeRegisterUserRequest,
+	createEventHandler := kithttp.NewServer(
+		makeCreateEventEndpoint(es),
+		decodeCreateEventRequest,
 		encodeResponse,
 		opts...,
 	)
 
-	loginUserHandler := kithttp.NewServer(
-		makeLoginUserEndpoint(as),
-		decodeLoginUserRequest,
+	getEventListHandler := kithttp.NewServer(
+		makeGetEventListEndpoint(es),
+		decodeGetEventListRequest,
 		encodeResponse,
 		opts...,
 	)
 
 	r := mux.NewRouter()
 
-	r.Handle("/auth/register", registerUserHandler).Methods("POST")
-	r.Handle("/auth/login", loginUserHandler).Methods("POST")
+	r.Handle("/event/create", createEventHandler).Methods("POST")
+	r.Handle("/event/getall", getEventListHandler).Methods("GET")
 
 	return r
 }
 
-func decodeRegisterUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeCreateEventRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var body struct {
-		Username string `json:"username"`
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Name string `json:"name"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, err
 	}
 
-	params := (&auth.UserToCreate{}).
-		Email(body.Email).
-		EmailVerified(false).
-		Password(body.Password).
-		DisplayName(body.Username).
-		Disabled(false)
+	params := New(body.Name)
 
-	return RegisterUserRequest{
+	return CreateEventRequest{
 		params,
 	}, nil
 }
 
-func decodeLoginUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var body struct {
-		Username string `json:"username"`
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		return nil, err
-	}
-
-	return LoginUserRequest{
-		body.Email,
-		body.Password,
-	}, nil
+func decodeGetEventListRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	return GetEventListRequest{}, nil
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

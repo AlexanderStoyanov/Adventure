@@ -13,7 +13,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	auth "auth"
+	event "event"
 )
 
 const (
@@ -45,14 +45,14 @@ func main() {
 		logger.Log("error initializing firebase app", err)
 	}
 
-	var userRepo, _ = auth.NewUserRepository(app, logger)
+	var eventRepo, _ = event.NewEventRepository(app, logger)
 
-	var as auth.Service
-	as = auth.NewService(userRepo, logger)
+	var es event.Service
+	es = event.NewService(eventRepo, logger)
 
 	httpLogger := log.With(logger, "component", "http")
 	mux := http.NewServeMux()
-	mux.Handle("/auth/", auth.MakeHandler(as, httpLogger))
+	mux.Handle("/event/", event.MakeHandler(es, httpLogger))
 
 	http.Handle("/", accessControl(mux))
 	http.Handle("/metrics", promhttp.Handler())

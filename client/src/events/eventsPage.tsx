@@ -13,9 +13,9 @@ class EventsPage extends React.Component<Props> {
         return(
             <div className="container">
                 <div className="row mt-5">
-                    <div className="col-md-4 mx-auto">
+                    <div className="col-md-12 mx-auto">
                         <Events 
-                            
+
                         />
                     </div>
                 </div>
