@@ -51,6 +51,8 @@ func (repo *eventRepository) GetEventList(ctx context.Context) ([]Event, error) 
 	if err != nil {
 		return nil, err
 	}
+	var event Event
+	var events []Event
 	iter := client.Collection("events").Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -61,6 +63,10 @@ func (repo *eventRepository) GetEventList(ctx context.Context) ([]Event, error) 
 			return nil, err
 		}
 		fmt.Println(doc.Data())
+		doc.DataTo(&event)
+		fmt.Println(event)
+		events = append(events, event)
 	}
-	return nil, nil
+	fmt.Println(events)
+	return events, nil
 }

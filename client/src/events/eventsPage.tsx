@@ -3,12 +3,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { AppState } from '../rootReducer';
 import Events from './events';
+import { loadEventList } from './redux/actions';
 
 interface Props {
-
+    loadEventList: () => void
 }
 
+
 class EventsPage extends React.Component<Props> {
+
+    componentDidMount() {
+        this.props.loadEventList()
+    }
+
     render() {
         return(
             <div className="container">
@@ -30,7 +37,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(
     {
-
+        loadEventList,
     },
     dispatch
 )

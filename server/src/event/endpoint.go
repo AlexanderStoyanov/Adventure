@@ -30,8 +30,8 @@ type GetEventListRequest struct {
 
 // GetEventListResponse holds the response values for the GetEventByID method
 type GetEventListResponse struct {
-	Events []Event
-	Err    error
+	Events []Event `json:"events,omitempty"`
+	Err    error   `json:"error,omitempty"`
 }
 
 func makeGetEventListEndpoint(s Service) endpoint.Endpoint {

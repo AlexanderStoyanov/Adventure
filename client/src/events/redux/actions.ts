@@ -14,12 +14,13 @@ import {
 } from "./types";
 
 
-//Sign up attempt
-export const userSignUpRequest = (): ThunkAction<void, AppState, null, Action<string>> => {
+//Loading event list
+export const loadEventList = (): ThunkAction<void, AppState, null, Action<string>> => {
     return async dispatch => {
         dispatch(request(EVENTS_LOAD_REQUEST));
         try {
-            let res = await axios.post('//localhost:8080/auth/register');
+            let res = await axios.get('//localhost:8080/event/getall');
+            console.log(res);
             dispatch(receive(EVENTS_LOAD_SUCCESS, res.data));
         } catch (err) {
             dispatch(error(EVENTS_LOAD_FAILURE, err.message));
