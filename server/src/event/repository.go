@@ -62,9 +62,7 @@ func (repo *eventRepository) GetEventList(ctx context.Context) ([]Event, error) 
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(doc.Data())
 		doc.DataTo(&event)
-		fmt.Println(event)
 		events = append(events, event)
 	}
 	fmt.Println(events)

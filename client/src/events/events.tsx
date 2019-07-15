@@ -1,19 +1,27 @@
 import React from 'react';
 import EventEntry from "./eventEntry";
+import { EventEntity } from "./redux/types";
 
 interface Props {
+    events: {
+        loading: boolean
+        error?: string | null
+        list?: Array<EventEntity>
+    }
 }
 
 
-class Event extends React.Component<Props> {
-
-
+class Events extends React.Component<Props> {
     render() {
-        let eventEntries =
-            <EventEntry
-                eventName="event1"
-                peopleJoined="100"
-            />;
+        var eventEntries = null;
+        if (this.props.events.list) {
+            eventEntries = this.props.events.list.map(event => {
+                return <EventEntry
+                    key={event.Name}
+                    event={event}
+                />;
+            });
+        }
         return (
             <ul className="list-group">
                 {eventEntries}
@@ -22,4 +30,4 @@ class Event extends React.Component<Props> {
     }
 }
 
-export default Event;
+export default Events;

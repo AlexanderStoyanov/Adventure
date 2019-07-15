@@ -42,7 +42,7 @@ func MakeHandler(es Service, logger kitlog.Logger) http.Handler {
 
 func decodeCreateEventRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var body struct {
-		Name string `json:"name"`
+		Name string `json:"eventname"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {

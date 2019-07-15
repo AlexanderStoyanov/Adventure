@@ -1,15 +1,15 @@
 import React from 'react';
+import { EventEntity } from "./redux/types";
 
 interface Props {
-    eventName: string
-    peopleJoined: string
+    event: EventEntity
 }
 
-const EventEntry: React.FunctionComponent<Props> = ({ eventName, peopleJoined }) => {
+const EventEntry: React.FunctionComponent<Props> = ({ event }) => {
     return (
         <li className="list-group-item d-flex justify-content-between align-items-center">
-            {eventName}
-            <span className="badge badge-primary badge-pill">{peopleJoined}</span>
+            {event.Name}
+            <span className="badge badge-primary badge-pill">{event.PeopleJoined}</span>
         </li>
     );
 };

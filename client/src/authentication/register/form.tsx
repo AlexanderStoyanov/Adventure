@@ -8,11 +8,11 @@ interface Props {
 }
 
 interface State {
-    username: string;
-    email: string;
-    password: string;
-    errors: ErrorEntity;
-    timeout: boolean;
+    username: string
+    email: string
+    password: string
+    errors: ErrorEntity
+    timeout: boolean
 }
 
 class Form extends React.Component<Props, State> {
@@ -47,7 +47,6 @@ class Form extends React.Component<Props, State> {
         if (this.isValid()) {
             const { username, email, password } = this.state;
             //this.setState({ timeout: true });
-            console.log(this.state);
             this.props.userSignUpRequest({username, email, password});
             // this.setState({ errors: {}, timeout: true });
             // this.props.userSignUpRequest(this.state).then(

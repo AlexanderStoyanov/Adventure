@@ -1,5 +1,6 @@
 export default interface ErrorEntity {
-    username?: string;
-    email?: string;
-    password?: string;
+    username?: string
+    email?: string
+    password?: string
+    eventname?: string
 }
